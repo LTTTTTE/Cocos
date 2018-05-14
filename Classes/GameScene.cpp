@@ -101,6 +101,12 @@ bool GameScene::onTouchBegan(Touch* touch, Event* unusedEvent) {
 	return true;
 }
 
+void GameScene::removeNode(Node * node){
+	if (node != nullptr)
+		this->removeChild(node);
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameScene::update(float dt) {
@@ -116,12 +122,23 @@ void GameScene::update(float dt) {
 	if (toggle == 1) {
 		spr_player->setPosition(spr_player->getPosition().x + vec, spr_player->getPosition().y);
 	}
-	for (int i = 0; i < vec_snow.size();) {
+	for (int i = 0; i < vec_snow.size();) {//for문돌시 erase되는 조건문에서는 i++이되면안댐
 		if (vec_snow[i]->getBoundingBox().containsPoint(spr_player->getPosition())) {
 			
-			Sprite* spr_explosion = (Sprite*)this->getChildByName("explosion");
-			spr_explosion->setPosition(vec_snow[i]->getPosition());
-			//this->addChild(spr_explosion);
+			auto ani_explosion = Animation::create();
+			ani_explosion->setDelayPerUnit(0.05);
+
+			Sprite* spr_explostion = Sprite::create("pixelExplosion00.png");
+			spr_explostion->setPosition(vec_snow[i]->getPosition());
+			this->addChild(spr_explostion, 0, "explosion");
+
+			for (int i = 0; i < 8; i++) {
+
+				ani_explosion->addSpriteFrameWithFile(StringUtils::format("pixelExplosion%02d.png", i));
+			}
+			auto ani_explosion_ani = Animate::create(ani_explosion);
+			auto act_explosion_ani = Sequence::create(ani_explosion_ani, CallFunc::create(CC_CALLBACK_0(GameScene::removeNode, this, spr_explostion)),nullptr );
+			spr_explostion->runAction(act_explosion_ani);
 
 			this->removeChild(vec_snow[i]);
 			vec_snow.erase(vec_snow.begin() + i);
@@ -178,20 +195,6 @@ bool GameScene::init() {
 	label_point->setPosition(950, 700);
 	this->addChild(label_point, 5, "point");
 	
-	auto ani_explosion = Animation::create();
-	ani_explosion->setDelayPerUnit(0.05);
-
-	Sprite* spr_explostion = Sprite::create("pixelExplosion00.png");
-	spr_explostion->setPosition(500, 500);
-	this->addChild(spr_explostion,0,"explosion");
-
-	for (int i = 0; i < 8; i++) {
-
-		ani_explosion->addSpriteFrameWithFile(StringUtils::format("pixelExplosion%02d.png", i));
-	}
-	auto ani_explosion_ani = Animate::create(ani_explosion);
-	auto act_ani_explosion = RepeatForever::create(ani_explosion_ani);
-	spr_explostion->runAction(act_ani_explosion);
 	
 	this->scheduleUpdate();
 
