@@ -122,7 +122,7 @@ void GameScene::update(float dt) {
 	if (toggle == 1) {
 		spr_player->setPosition(spr_player->getPosition().x + vec, spr_player->getPosition().y);
 	}
-	for (int i = 0; i < vec_snow.size();) {//forë¬¸ëŒì‹œ eraseë˜ëŠ” ì¡°ê±´ë¬¸ì—ì„œëŠ” i++ì´ë˜ë©´ì•ˆëŒ
+	for (int i = 0; i < vec_snow.size();) {//for¹®µ¹½Ã eraseµÇ´Â Á¶°Ç¹®¿¡¼­´Â i++ÀÌµÇ¸é¾È´ï
 		if (vec_snow[i]->getBoundingBox().containsPoint(spr_player->getPosition())) {
 			
 			auto ani_explosion = Animation::create();

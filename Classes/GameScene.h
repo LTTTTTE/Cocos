@@ -12,7 +12,7 @@ public:
 	virtual void onKeyReleased(EventKeyboard::KeyCode, Event*);
 
 	bool onTouchBegan(Touch * touch, Event * unusedEvent);
-
+	void removeNode(Node * node);
 	virtual void update(float dt);
 
 	static Scene* createScene();
