@@ -1,8 +1,5 @@
 #include "HelloWorldScene.h"
 
-std::random_device rd;
-std::mt19937_64 _MT19937(rd());
-
 Scene* HelloWorld::createScene()
 {
 	Scene* scene = HelloWorld::create();
@@ -18,8 +15,6 @@ bool HelloWorld::init()
 		return false;
 	}
 	
-
-
 	this->createWorld();
 
 	auto listener_keyboard = EventListenerKeyboard::create();
@@ -56,11 +51,24 @@ bool HelloWorld::createWorld()
 
 bool HelloWorld::layer_inven()
 {
-	auto layer_spr_inven = Layer::create();
+	layer_spr_inven = Layer::create();
 
 	auto spr_inven = Sprite::create("inven.png");
 	spr_inven->setScale(0.3);
-	this->addChild(spr_inven, 2, "inven");
+	layer_spr_inven->addChild(spr_inven, 2, "inven");
+	spr_inven->setVisible(true);
+	this->addChild(layer_spr_inven);
+
+	auto spr_man = Sprite::create("man.png");
+	spr_man->setScale(1.5);
+	spr_man->setPosition(-80, 70);
+	layer_spr_inven->addChild(spr_man, 3);
+
+	auto label_name = Label::createWithSystemFont("", "", 34,
+		Size(300, 100), TextHAlignment::CENTER, TextVAlignment::CENTER);
+
+	layer_spr_inven->addChild(label_name, 3, "label_name");
+
 	return true;
 }
 
@@ -133,12 +141,16 @@ void HelloWorld::update(float dt)
 		spr_man->setPosition(spr_man->getPosition().x , spr_man->getPosition().y + vec_1);
 	}
 	
-	auto spr_inven = ((Sprite*)this->getChildByName("inven"));
-	if (toggle_layer_inven)spr_inven->setVisible(true);
-	else spr_inven->setVisible(false);
+	if (toggle_layer_inven)layer_spr_inven->setVisible(true);
+	else layer_spr_inven->setVisible(false);
 
-	spr_inven->setPosition(pos_man.x + 330, pos_man.y + 200);
+	layer_spr_inven->setPosition(pos_man.x + 330, pos_man.y + 200);
 	
+	Label* label_name = (Label*)layer_spr_inven->getChildByName("label_name");
+	
+	//label_name->setString();
+
+
 	auto follow = Follow::create(spr_man, Rect::ZERO);
 	this->runAction(follow);
 }

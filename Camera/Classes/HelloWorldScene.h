@@ -5,11 +5,18 @@
 USING_NS_CC;
 
 #define winsize Director::getInstance()->getWinSize()
-#define MT19937 std::uniform_int_distribution<__int64>
+//#define MT19937 std::uniform_int_distribution<__int64>
+
+//std::random_device rd;
+//std::mt19937_64 _MT19937(rd());
+
+class Man;
 
 class HelloWorld : public Scene {
 
 public:
+
+	Man* Player;
 
 	int toggle_keyboard = 0;
 	int toggle_keyboard_1 = 0;
