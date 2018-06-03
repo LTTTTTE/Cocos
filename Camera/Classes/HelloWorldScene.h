@@ -16,13 +16,16 @@ public:
 	int vec = 0;
 	int vec_1 = 0;
 	int point = 0;
-	int isjumped = 0;
+	bool toggle_layer_inven = 0;
+
+	Vec2 pos_man;
+	Layer* layer_spr_inven;
 
 	static Scene* createScene();
 	virtual bool init();
 
 	bool createWorld();
-
+	bool layer_inven();
 	std::vector<Sprite*>spr_tree;
 
 	virtual void onKeyPressed(EventKeyboard::KeyCode, Event*);
