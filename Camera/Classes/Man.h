@@ -1,16 +1,36 @@
-#include "HelloWorldScene.h"
+#pragma once
+
+#include "cocos2d.h"
+
+#pragma execution_character_set("utf-8")
+
+USING_NS_CC;
+
+#define winsize Director::getInstance()->getWinSize()
+
+typedef struct {
+
+	std::string item;
+	int value;
+
+}_inven;
 
 class Man
 {
 public:
 
-	
-	String name;
+	std::vector<_inven>Inven;
+
+	std::string name;
 	int level;
 	int hp;
 	
 	Man();
 
-	String getName() { return name; }
+	std::string getName() { return name; }
+	int getLevel() { return level; }
+	int getHp() { return hp; }
+
+	void setInven(_inven i);
 };
 

@@ -10,13 +10,10 @@ USING_NS_CC;
 //std::random_device rd;
 //std::mt19937_64 _MT19937(rd());
 
-class Man;
-
 class HelloWorld : public Scene {
 
 public:
 
-	Man* Player;
 
 	int toggle_keyboard = 0;
 	int toggle_keyboard_1 = 0;
@@ -33,8 +30,9 @@ public:
 
 	bool createWorld();
 	bool layer_inven();
+	std::vector<Sprite*>inven_item;
 	std::vector<Sprite*>spr_tree;
-
+	bool onTouchBegan(Touch* touch, Event* event);
 	virtual void onKeyPressed(EventKeyboard::KeyCode, Event*);
 	virtual void onKeyReleased(EventKeyboard::KeyCode, Event*);
 
