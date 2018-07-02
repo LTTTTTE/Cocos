@@ -1,7 +1,4 @@
 #include "HelloWorldScene.h"
-#include "Man.h"
-
-Man* Player = new Man();
 
 Scene* HelloWorld::createScene()
 {
@@ -10,15 +7,112 @@ Scene* HelloWorld::createScene()
 	return scene;
 }
 
+bool HelloWorld::init_background() {
+
+	auto node = ParallaxNode::create();
+	this->addChild(node);
+
+	auto act_1 = MoveBy::create(120, Point(-2800, 0));
+	auto act_2 = Place::create(Point(0, 0));
+	auto act_3 = Sequence::create(act_1, act_2, NULL);
+	auto act_4 = RepeatForever::create(act_3);
+	node->runAction(act_4);
+
+	auto spr_1 = Sprite::create("background_sky.png");
+	spr_1->setAnchorPoint(Point(0, 0.95));
+	spr_1->setScale(0.5);
+	node->addChild(spr_1, -1, Point(1, 0), Point(0, winsize.height));
+
+	auto spr_1_1 = Sprite::create("background_sky_1.png");
+	spr_1_1->setAnchorPoint(Point(0, 0.95));
+	spr_1_1->setScale(0.5);
+	node->addChild(spr_1_1, -1, Point(1, 0), Point(1400, winsize.height));
+
+	auto spr_1_2 = Sprite::create("background_sky.png");
+	spr_1_2->setAnchorPoint(Point(0, 0.95));
+	spr_1_2->setScale(0.5);
+	node->addChild(spr_1_2, -1, Point(1, 0), Point(2800, winsize.height));
+
+
+	return true;
+}
+
+bool HelloWorld::init_button() {
+
+	auto spr_ui_button = Sprite::create("menu.png");
+	spr_ui_button->setScale(0.2);
+	spr_ui_button->setPosition(winsize.width - (spr_ui_button->getContentSize().width) / 10, winsize.height - (spr_ui_button->getContentSize().height) / 10);
+	this->addChild(spr_ui_button, 2, "menu");
+	
+	auto spr_ui_button_1 = Sprite::create("grassBlock.png");
+	spr_ui_button_1->setPosition(spr_ui_button->getPosition().x - (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y + (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_button_1, 3,"spr_ui_button_1");
+
+	auto spr_ui_button_2 = Sprite::create("grassBlock_dead.png");
+	spr_ui_button_2->setPosition(spr_ui_button->getPosition().x + (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y + (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_button_2, 3, "spr_ui_button_2");
+
+	auto spr_ui_button_1_1 = Sprite::create("grassBlock_1.png");
+	spr_ui_button_1_1->setPosition(spr_ui_button->getPosition().x - (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y + (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_button_1_1, 3, "spr_ui_button_1_1");
+	spr_ui_button_1_1->setVisible(false);
+
+	auto spr_ui_button_2_1 = Sprite::create("grassBlock_dead_1.png");
+	spr_ui_button_2_1->setPosition(spr_ui_button->getPosition().x + (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y + (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_button_2_1, 3, "spr_ui_button_2_1");
+	spr_ui_button_2_1->setVisible(false);
+
+	auto spr_ui_trash = Sprite::create("Trash_Can_96px.png");
+	spr_ui_trash->setPosition(spr_ui_button->getPosition().x + (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y - (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_trash,3,"trashcan");
+
+	auto spr_ui_trash_1 = Sprite::create("Trash_Can_96px_1.png");
+	spr_ui_trash_1->setPosition(spr_ui_button->getPosition().x + (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y - (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_trash_1, 3,"trashcan_1");
+	spr_ui_trash_1->setVisible(false);
+
+	auto spr_ui_man = Sprite::create("GingerMan_96px.png");
+	spr_ui_man->setPosition(spr_ui_button->getPosition().x - (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y - (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_man, 3, "man");
+
+	auto spr_ui_man_1 = Sprite::create("GingerMan_96px_1.png");
+	spr_ui_man_1->setPosition(spr_ui_button->getPosition().x - (spr_ui_button->getContentSize().width) / 22, spr_ui_button->getPosition().y - (spr_ui_button->getContentSize().height) / 22);
+	this->addChild(spr_ui_man_1, 3, "man_1");
+	spr_ui_man_1->setVisible(false);
+
+	return true;
+}
+
+bool HelloWorld::init_other() {
+
+	drawP1 = b2Vec2(200 / PTM_RATIO, 100 / PTM_RATIO);
+	drawP2 = b2Vec2(400 / PTM_RATIO, 300 / PTM_RATIO);
+
+	auto draw = DrawNode::create(); 
+	draw->drawLine(Vec2(drawP1.x*PTM_RATIO, drawP1.y*PTM_RATIO), Point(drawP2.x*PTM_RATIO, drawP2.y*PTM_RATIO), Color4F::RED);
+	this->addChild(draw, 5,"draw");
+
+	auto spr_globe = Sprite::create("Globe_48px.png");
+	spr_globe->setScale(0.2);
+	spr_globe->setPosition(drawP2.x*PTM_RATIO, drawP2.y*PTM_RATIO);
+
+	auto spr_globe_1 = Sprite::create("Globe_48px.png");
+	spr_globe_1->setScale(0.2);
+	spr_globe_1->setPosition(drawP1.x*PTM_RATIO, drawP1.y*PTM_RATIO);
+
+	this->addChild(spr_globe);
+	this->addChild(spr_globe_1);
+
+	return true;
+}
+
 bool HelloWorld::init()
 {
-	
+
 	if (!Scene::init())
 	{
 		return false;
 	}
-	
-	this->createWorld();
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
@@ -29,130 +123,417 @@ bool HelloWorld::init()
 	listener_keyboard->onKeyPressed = CC_CALLBACK_2(HelloWorld::onKeyPressed, this);
 	listener_keyboard->onKeyReleased = CC_CALLBACK_2(HelloWorld::onKeyReleased, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener_keyboard, this);
-
-	this->layer_inven();
-	this->scheduleUpdate();
 	
-	[] {
-		CCLOG("Hi");
-	}();
 
-	return true;
-
-}
-
-bool HelloWorld::createWorld()
-{
-
-	for (int i = 0; i < 10; i++) {
-
-		auto spr = Sprite::create("tree_1.png");
-		spr->setPosition(50 + 50 * i, 50 + 50 * i);
-		spr_tree.push_back(spr);
-		this->addChild(spr_tree[i]);
-
-	}
-
-
-	auto spr_man = Sprite::create("man.png");
-	spr_man->setPosition(winsize.width / 2, winsize.height / 2);
-	this->addChild(spr_man, 1, "man");
-	
-	return true;
-
-}
-
-bool HelloWorld::layer_inven()
-{
-	layer_spr_inven = Layer::create();
-
-	auto spr_inven = Sprite::create("inven.png");
-	spr_inven->setScale(0.3);
-	layer_spr_inven->addChild(spr_inven, 2, "inven");
-	spr_inven->setVisible(true);
-	this->addChild(layer_spr_inven);
-
-	auto spr_inven_1 = Sprite::create("inven_1.png");
-	spr_inven_1->setScale(0.65);
-	spr_inven_1->setPosition(0, -60);
-	layer_spr_inven->addChild(spr_inven_1, 3, "inven_1");
-
-	auto spr_inven_2 = Sprite::create("inven_2.png");
-	spr_inven_2->setScale(0.7);
-	spr_inven_2->setAnchorPoint(Point(0, 0));
-	spr_inven_2->setVisible(false);
-	layer_spr_inven->addChild(spr_inven_2, 4, "inven_2");
-
-	auto spr_man = Sprite::create("man.png");
-	spr_man->setScale(1.5);
-	spr_man->setPosition(-80, 70);
-	layer_spr_inven->addChild(spr_man, 3);
-
-	auto label_name = Label::createWithSystemFont("", "", 15,
-		Size(100, 100), TextHAlignment::LEFT, TextVAlignment::CENTER);
-	label_name->setPosition(20, 90);
-	layer_spr_inven->addChild(label_name, 3, "label_name");
-
-	auto label_level = Label::createWithSystemFont("", "", 15,
-		Size(100, 100), TextHAlignment::LEFT, TextVAlignment::CENTER);
-	label_level->setPosition(20, 70);
-	layer_spr_inven->addChild(label_level, 3, "label_level");
-
-	auto label_hp = Label::createWithSystemFont("", "", 15,
-		Size(100, 100), TextHAlignment::LEFT, TextVAlignment::CENTER);
-	label_hp->setPosition(20, 50);
-	layer_spr_inven->addChild(label_hp, 3, "label_hp");
-
-	auto spr_apple = Sprite::create("Red_Apple.png");
-	spr_apple->setPosition(-111, -12);
-	spr_apple->setScale(0.12);
-	layer_spr_inven->addChild(spr_apple, 3, "spr_apple");
-
-	inven_item.push_back(spr_apple);
-
-	auto spr_wood = Sprite::create("Wood.png");
-	spr_wood->setPosition(-80, -12);
-	spr_wood->setScale(0.12);
-	spr_wood->setScaleX(0.09);
-	layer_spr_inven->addChild(spr_wood, 3, "spr_wood");
-
-	inven_item.push_back(spr_wood);
-
-	auto spr_leaf = Sprite::create("Leaf_48px.png");
-	spr_leaf->setPosition(-111, -43);
-	spr_leaf->setScale(0.5);
-	layer_spr_inven->addChild(spr_leaf, 3, "spr_leaf");
-
-	inven_item.push_back(spr_leaf);
+	this->init_background();
+	this->init_button();
+	this->init_other();
+	this->createBox2dWorld();
+	this->setBox2dWorld();
+	this->schedule(schedule_selector(HelloWorld::tick));
+	this->schedule(schedule_selector(HelloWorld::ui_update));
 
 	return true;
 }
 
-bool HelloWorld::onTouchBegan(Touch* touch, Event* event) 
-{
-	CCLOG("%f %f", touch->getLocation().x, touch->getLocation().y);
+void HelloWorld::tick(float dt) {
 
-	for (int i = 0; i < inven_item.size();i++) {
+	world->Step(dt, 8, 3);
+	world->RayCast(this, drawP1, drawP2);
 
-		CCLOG("tried");
-		CCLOG("(%f , %f)", inven_item[i]->getBoundingBox().getMidX(), inven_item[i]->getBoundingBox().getMidY());
+	/*if (!triggered) {
 
-		if (inven_item[i]->getBoundingBox().containsPoint( touch->getLocation())) {
-			auto inven_2 = ((Sprite*)this->getChildByName("inven_2"));
-			inven_2->setVisible(true);
-			inven_2->setPosition(touch->getLocation());
-			CCLOG("inven_info");
+		CCLOG("not_Triggered %d",triggered);
+
+		drawP2 = b2Vec2(400 / PTM_RATIO, 300 / PTM_RATIO);
+
+		this->removeChildByName("draw");
+
+		auto draw = DrawNode::create();
+		draw->drawLine(Vec2(drawP1.x*PTM_RATIO, drawP1.y*PTM_RATIO), Point(drawP2.x*PTM_RATIO, drawP2.y*PTM_RATIO), Color4F::RED);
+		this->addChild(draw, 5, "draw");
+	}*/
+
+	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
+
+		if (b->GetUserData() != nullptr) {
+
+			auto spr = (Sprite*)b->GetUserData();
+			auto man = (Sprite*)this->getChildByName("man_spawned");
+
+			if (spr == man) {
+
+				if (toggle_keyboard == 2) {
+					CCLOG("keyboard_1");
+					b->ApplyForceToCenter(b2Vec2(vec*100 / PTM_RATIO, 0), true);
+				}
+				if (toggle_keyboard == 1) {
+					CCLOG("keyboard_2");
+					b->ApplyForceToCenter(b2Vec2(vec*100 / PTM_RATIO, 0), true);
+				}
+				if (isjumped == 1) {
+					CCLOG("JUMP!");
+					b->ApplyForceToCenter(b2Vec2(0, 400), true);
+					isjumped--;
+				}
+				
+			}
+
+			spr->setPosition(Vec2((b->GetPosition().x)*(PTM_RATIO), (b->GetPosition().y)*(PTM_RATIO)));
+			spr->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
 
+	triggered = false;
+
+}
+
+void HelloWorld::ui_update(float dt) {
+
+	if (toggle == 0) { //아무것도 클릭 안한상태
+
+		((Sprite*)this->getChildByName("spr_ui_button_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_1_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_2"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_2_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("trashcan"))->setVisible(true);
+		((Sprite*)this->getChildByName("trashcan_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("man"))->setVisible(true);
+		((Sprite*)this->getChildByName("man_1"))->setVisible(false);
+	}
+
+	if (toggle == 1) { //첫번째꺼 클릭상태
+
+		((Sprite*)this->getChildByName("spr_ui_button_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_1_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_2"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_2_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("trashcan"))->setVisible(true);
+		((Sprite*)this->getChildByName("trashcan_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("man"))->setVisible(true);
+		((Sprite*)this->getChildByName("man_1"))->setVisible(false);
+	}
+
+	if (toggle == 2) { //두번째꺼 클릭상태
+
+		((Sprite*)this->getChildByName("spr_ui_button_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_1_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_2"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_2_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("trashcan"))->setVisible(true);
+		((Sprite*)this->getChildByName("trashcan_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("man"))->setVisible(true);
+		((Sprite*)this->getChildByName("man_1"))->setVisible(false);
+	}
+
+	if (toggle == 3) { //인간 클릭상태
+
+		((Sprite*)this->getChildByName("spr_ui_button_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_1_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_2"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_2_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("trashcan"))->setVisible(true);
+		((Sprite*)this->getChildByName("trashcan_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("man"))->setVisible(false);
+		((Sprite*)this->getChildByName("man_1"))->setVisible(true);
+	}
+
+	if (toggle == 4) { //쓰래기통 클릭상태
+
+		((Sprite*)this->getChildByName("spr_ui_button_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_1_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("spr_ui_button_2"))->setVisible(true);
+		((Sprite*)this->getChildByName("spr_ui_button_2_1"))->setVisible(false);
+		((Sprite*)this->getChildByName("trashcan"))->setVisible(false);
+		((Sprite*)this->getChildByName("trashcan_1"))->setVisible(true);
+		((Sprite*)this->getChildByName("man"))->setVisible(true);
+		((Sprite*)this->getChildByName("man_1"))->setVisible(false);
+	}
+	if (((Sprite*)this->getChildByName("man_spawned")) != nullptr) {
+		auto follow = Follow::create(((Sprite*)this->getChildByName("man_spawned")), Rect::ZERO);
+		this->runAction(follow);
+	}
+	else {
+		auto follow_default = Follow::create(((Sprite*)this->getChildByName("middle")), Rect::ZERO);
+		this->runAction(follow_default);
+	}
+
+}
+
+bool HelloWorld::createBox2dWorld() {
+
+	world = new b2World(b2Vec2(0, 0));
+	world->SetAllowSleeping(true);
+	world->SetContinuousPhysics(true);
+
+
 	return true;
+}
+
+void HelloWorld::setBox2dWorld() {
+
+	auto mid_shit = Sprite::create("button_48px.png");
+	mid_shit->setPosition(winsize.width / 2, winsize.height / 2);
+	mid_shit->setVisible(false);
+	this->addChild(mid_shit,-5,"middle");
+
+	auto spr_block_1 = Sprite::create("grassBlock_dead.png");
+	spr_block_1->setPosition(100, 650);
+	this->addChild(spr_block_1, 2);
+
+	b2Body* body_block_static_1;
+	b2BodyDef bodydef_block_static_1;
+
+	bodydef_block_static_1.type = b2_staticBody;
+	bodydef_block_static_1.position.Set(spr_block_1->getPosition().x / PTM_RATIO, spr_block_1->getPosition().y / PTM_RATIO);
+	bodydef_block_static_1.userData = spr_block_1;
+
+	body_block_static_1 = world->CreateBody(&bodydef_block_static_1);
+
+	b2FixtureDef fixdef_block_static_1; 
+	b2PolygonShape shape_block_static_1;
+	shape_block_static_1.SetAsBox(spr_block_1->getContentSize().width / 2.0 / PTM_RATIO, spr_block_1->getContentSize().height / 2.0 / PTM_RATIO);
+
+	fixdef_block_static_1.shape = &shape_block_static_1;
+	fixdef_block_static_1.density = 1.0f;
+	
+	body_block_static_1->CreateFixture(&fixdef_block_static_1);
+
+}
+
+bool HelloWorld::onTouchBegan(Touch* touch, Event* event) {
+
+	Vec2 point = Vec2(touch->getLocation().x, touch->getLocation().y);
+
+	CCLOG("TOUCH %d", toggle);
+
+	{ // toggle ALGO
+		if (toggle == 0) {
+
+			if ((Sprite*)this->getChildByName("spr_ui_button_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 1;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_2")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 2;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("man")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 3;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("trashcan")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 4;
+				return true;
+			}
+			
+		}
+
+		if (toggle == 1) {
+
+			if ((Sprite*)this->getChildByName("spr_ui_button_1_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 0;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_2")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 2;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("man")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 3;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("trashcan")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 4;
+				return true;
+			}
+		}
+
+		if (toggle == 2) {
+
+			if ((Sprite*)this->getChildByName("spr_ui_button_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 1;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_2_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 0;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("man")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 3;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("trashcan")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 4;
+				return true;
+			}
+			
+		}
+
+		if (toggle == 3) {
+
+			if ((Sprite*)this->getChildByName("spr_ui_button_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 1;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_2_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 2;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("man")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 0;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("trashcan")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 4;
+				return true;
+			}
+
+		}
+
+		if (toggle == 4) {
+
+			if ((Sprite*)this->getChildByName("trashcan_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 0;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_1")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 1;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("spr_ui_button_2")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 2;
+				return true;
+			}
+			if ((Sprite*)this->getChildByName("man")->getBoundingBox().containsPoint(touch->getLocation())) {
+				toggle = 3;
+				return true;
+			}
+		}
+
+	}
+
+	if ((Sprite*)this->getChildByName("menu")->getBoundingBox().containsPoint(touch->getLocation()))return true; //박스ui안 스폰금지
+	this->addNewBody(point);
+	this->delete_body(point);
+	return true;
+}
+
+void HelloWorld::addNewBody(Vec2 point) {
+
+	if (toggle == 1) { // dynamic 조건
+
+		auto spr_block_dymic = Sprite::create("grassBlock.png");
+		spr_block_dymic->setPosition(point);
+		this->addChild(spr_block_dymic, 2);
+
+
+		b2Body* body_dymic_block;
+		b2BodyDef bodydef_dymic_block;
+
+		bodydef_dymic_block.userData = spr_block_dymic;
+		bodydef_dymic_block.position.Set(point.x / PTM_RATIO, point.y / PTM_RATIO);
+		bodydef_dymic_block.type = b2_dynamicBody;
+
+		body_dymic_block = world->CreateBody(&bodydef_dymic_block);
+
+		b2FixtureDef fixdef_dymic_block;
+		b2PolygonShape shape_dymic_block;
+		shape_dymic_block.SetAsBox(((spr_block_dymic->getContentSize().width) / 2.0) / PTM_RATIO, ((spr_block_dymic->getContentSize().height) / 2.0) / PTM_RATIO);
+
+		fixdef_dymic_block.shape = &shape_dymic_block;
+		fixdef_dymic_block.density = 1.0f;
+
+		body_dymic_block->CreateFixture(&fixdef_dymic_block);
+		CCLOG("dynamic body : DONE");
+
+	}
+
+	if (toggle == 2) {// static조건
+
+
+		auto spr_block_static = Sprite::create("grassBlock_dead.png");
+		spr_block_static->setPosition(point);
+		this->addChild(spr_block_static, 2);
+
+
+		b2Body* body_static_block;
+		b2BodyDef bodydef_static_block;
+
+		bodydef_static_block.userData = spr_block_static;
+		bodydef_static_block.position.Set(point.x / PTM_RATIO, point.y / PTM_RATIO);
+		bodydef_static_block.type = b2_staticBody;
+
+		body_static_block = world->CreateBody(&bodydef_static_block);
+
+		b2FixtureDef fixdef_static_block;
+		b2PolygonShape shape_static_block;
+		shape_static_block.SetAsBox(((spr_block_static->getContentSize().width) / 2.0) / PTM_RATIO, ((spr_block_static->getContentSize().height) / 2.0) / PTM_RATIO);
+
+		fixdef_static_block.shape = &shape_static_block;
+		fixdef_static_block.density = 1.0f;
+
+		body_static_block->CreateFixture(&fixdef_static_block);
+		CCLOG("static body : DONE");
+	}
+
+	if (toggle == 3) {// 인간조건
+
+
+		auto spr_dymic_man = Sprite::create("GingerMan_96px.png");
+		spr_dymic_man->setPosition(point);
+		this->addChild(spr_dymic_man, 2, "man_spawned");
+
+
+		b2Body* body_dymic_man;
+		b2BodyDef bodydef_dymic_man;
+
+		bodydef_dymic_man.userData = spr_dymic_man;
+		bodydef_dymic_man.position.Set(point.x / PTM_RATIO, point.y / PTM_RATIO);
+		bodydef_dymic_man.type = b2_dynamicBody;
+
+		body_dymic_man = world->CreateBody(&bodydef_dymic_man);
+
+		b2FixtureDef fixdef_dymic_man;
+		b2PolygonShape shape_dymic_man;
+		shape_dymic_man.SetAsBox(((spr_dymic_man->getContentSize().width) / 3) / PTM_RATIO, ((spr_dymic_man->getContentSize().height) / 3) / PTM_RATIO);
+
+		fixdef_dymic_man.shape = &shape_dymic_man;
+		fixdef_dymic_man.density = 1.0f;
+
+		body_dymic_man->CreateFixture(&fixdef_dymic_man);
+		CCLOG("dynamic man : DONE");
+	}
+
+}
+
+void HelloWorld::delete_body(Vec2 point) {
+
+
+	if(toggle==4)
+	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
+
+		if (b->GetUserData() != nullptr) {
+
+			auto spr = (Sprite*)b->GetUserData();
+
+			if (spr->getBoundingBox().containsPoint(point)) {
+
+				this->removeChild(spr, true);
+				world->DestroyBody(b);
+
+				break;
+			}
+
+			
+		}
+	}
+
 }
 
 void HelloWorld::onKeyPressed(EventKeyboard::KeyCode e, Event *) {
 
 	CCLOG("keyPressed");
-
-	Sprite* spr = (Sprite*)this->getChildByName("man");
 
 	if (e == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
 
@@ -162,27 +543,16 @@ void HelloWorld::onKeyPressed(EventKeyboard::KeyCode e, Event *) {
 
 		++toggle_keyboard; vec = 3;
 	}
-	if (e == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+	if (e == EventKeyboard::KeyCode::KEY_SPACE) {
 
-		++toggle_keyboard_1; vec_1 = -3;
-	}
-	if (e == EventKeyboard::KeyCode::KEY_UP_ARROW) {
-
-		++toggle_keyboard_1; vec_1 = 3;
-	}
-	if (e == EventKeyboard::KeyCode::KEY_I) {
-
-		if (toggle_layer_inven)
-			toggle_layer_inven = false;
-		else toggle_layer_inven = true;
-		CCLOG("toggle_inven");
+		if (isjumped==0) {
+			isjumped++;
+		}
 	}
 
 }
 
 void HelloWorld::onKeyReleased(EventKeyboard::KeyCode e, Event *) {
-
-	Sprite* spr = (Sprite*)this->getChildByName("man");
 
 	if (e == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
 		--toggle_keyboard; vec = 3;
@@ -190,48 +560,27 @@ void HelloWorld::onKeyReleased(EventKeyboard::KeyCode e, Event *) {
 	if (e == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
 		--toggle_keyboard; vec = -3;
 	}
-	if (e == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
-		--toggle_keyboard_1; vec_1 = 3;
-	}
-	if (e == EventKeyboard::KeyCode::KEY_UP_ARROW) {
-		--toggle_keyboard_1; vec_1 = -3;
-	}
 
 }
 
-void HelloWorld::update(float dt)
-{
-	Sprite* spr_man = (Sprite*)this->getChildByName("man");
-	pos_man = spr_man->getPosition();
+float32 HelloWorld::ReportFixture(b2Fixture* fix, const b2Vec2& point, const b2Vec2& normal, float32 action) {
 
-	if (toggle_keyboard == 2) {
-		spr_man->setPosition(spr_man->getPosition().x + vec, spr_man->getPosition().y);
-	}
-	if (toggle_keyboard == 1) {
-		spr_man->setPosition(spr_man->getPosition().x + vec, spr_man->getPosition().y);
-	}
-	if (toggle_keyboard_1 == 2) {
-		spr_man->setPosition(spr_man->getPosition().x , spr_man->getPosition().y + vec_1);
-	}
-	if (toggle_keyboard_1 == 1) {
-		spr_man->setPosition(spr_man->getPosition().x , spr_man->getPosition().y + vec_1);
-	}
+	CCLOG("triggered");
+	triggered = true;
+	CCLOG("POINT : %f , %f", point.x, point.y);
+	CCLOG("NORMAL: %f , %f", normal.x, normal.y);
+	fix->GetBody()->ApplyForceToCenter(b2Vec2(0, 100), true);
+
+	/*drawP2 = point;
+
+	this->removeChildByName("draw");
+
+	auto draw = DrawNode::create();
+	draw->drawLine(Vec2(drawP1.x*PTM_RATIO, drawP1.y*PTM_RATIO), Point(drawP2.x*PTM_RATIO, drawP2.y*PTM_RATIO), Color4F::RED);
+	this->addChild(draw, 5, "draw");*/
+
 	
-	if (toggle_layer_inven)layer_spr_inven->setVisible(true);
-	else layer_spr_inven->setVisible(false);
-
-	layer_spr_inven->setPosition(pos_man.x + 330, pos_man.y + 200);
-	
-	Label* label_name = (Label*)layer_spr_inven->getChildByName("label_name");
-	label_name->setString(Player->getName());
-
-	Label* label_level = (Label*)layer_spr_inven->getChildByName("label_level");
-	label_level->setString(StringUtils::format("Level : %d ",Player->getLevel()));
-	
-	Label* label_hp = (Label*)layer_spr_inven->getChildByName("label_hp");
-	label_hp->setString(StringUtils::format("Level : %d ", Player->getHp()));
-
-
-	auto follow = Follow::create(spr_man, Rect::ZERO);
-	this->runAction(follow);
+	return 0.0f;
 }
+
+
